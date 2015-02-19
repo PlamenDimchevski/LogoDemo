@@ -1,0 +1,50 @@
+{
+   "framework_version": "1.0",
+   "id": "80",
+   "name": "Logo demo",
+   "description": "Description to my very cool and awesome demo, that no one will use ever",
+   "icon": "http://h.bg.nc/Apps/LogoDemo/Images/icon.png",
+   "tags": [ "logo demo" ],
+   "authors": [ "John Smith" ],
+   "site": "",
+   "version": "1.0",
+
+   "availability": "public",
+
+   "bindings": {
+      "add_content": [
+         {   
+            "id": "LogoDemo",
+            "caption": "Logo demo",
+            "icon": "http://stage.sitekreator.com/Core/AdminInterface/LeftMenu/Images/left_menu_items.png",
+            "properties_add": {
+               "source": "http://h.bg.nc/Apps/LogoDemo/Html/properties.htm"
+            },
+            "properties_edit": {
+               "source": "http://h.bg.nc/Apps/LogoDemo/Html/properties.htm"
+            },
+            "display_admin": {
+               "source": "http://h.bg.nc/Apps/LogoDemo/Html/display.htm",
+               "init": "SK.LogoDemo.Display",
+               "cache" : "0"
+            },
+            "display_user": {
+               "source": "http://h.bg.nc/Apps/LogoDemo/Html/display.htm",
+               "init": "SK.LogoDemo.Display",
+               "cache" : "0"
+            }
+         }
+      ],
+      "control_panel": [
+         {
+            "id": "LogoDemo",
+            "caption": "Logo Demo Configuration",
+            "source": "http://h.bg.nc/Apps/LogoDemo/Html/configuration.htm",
+            "init": "SK.LogoDemo.Configuration",
+            "display_options": {
+               "toolbar_bottom": "1"
+            }
+         }
+      ]
+   }
+}

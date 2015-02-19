@@ -1,0 +1,115 @@
+<!-- Load SK Utils resources -->
+<script src="/Shared/UIComponents/Internal/FileUpload/Scripts/fat_file_upload.js" type="text/javascript" ></script>
+<link href="/Shared/UIComponents/Internal/FileUpload/css/fat_file_upload.css"     rel="stylesheet" type="text/css" >
+
+<!-- 
+   App configuration class.
+   The best practice is this to be in separate file, but for the purposes of this demo, this will do.
+-->
+<script type="text/javascript">
+   // Namespace - always make sure, that the required namespace exists.
+   SK = window.SK || {};
+   SK.LogoDemo = SK.LogoDemo || {};
+
+   SK.LogoDemo.Configuration = new Class({
+      Extends     : SK.App.Popup,
+      configuration : null,   // Application configuration, passed to the costructor 
+      file_upload   : null,   // SK.UI.FileUpload instance 
+      options       : null,   // FileUpload options 
+   
+   
+      initialize : function ( configuration ) {
+         
+         this.configuration = configuration
+         
+         // File Upload options
+         this.options = {
+            container               : 'logo-image-demo-control',
+            validator               : {
+               allowed_formats: [
+                  'images'
+               ]
+            },
+            buttons                 : {
+               list           : [
+                  'delete',
+                   'edit'
+               ]
+            },
+            onComplete              : this.setLogoImgage.bind(this),
+               onButtonDelete          : this.setLogoImgage.bind(this),
+               onButtonChange          : this.setLogoImgage.bind(this)
+         };
+         
+         this.init();
+
+         this.parent();
+         // create a toolbar in the Window
+         this.initToolbarManager();
+         // create an update button
+         this.createToolbarButton({
+            id       : 'update',
+            caption  : "Update",
+            'class'  : 'btn-secondary',
+            callback : this.closeAndReload.bind(this)
+         });
+         
+      },
+
+      init : function () {
+
+         new SK.API( this.configuration.session_id ).execute(
+            // The name 'command', to be executed
+            // For more information see http://help.webforce.com/customer/portal/articles/1401805-api-index
+            'object.site.get',
+         
+            // Options for the api call.
+            // Each api calls have different parameters.
+            // Refer to the documentation for the API calls, to see what parameters shoud pass for each api call
+            {},
+         
+            // Callback method for the api call
+            function ( success, message, params ) {
+            
+                  // Init File Upload
+                  this.file_upload = new SK.UI.FileUpload( this.options );
+
+                  // Display current image
+                  if ( success ) {
+                     this.file_upload.setup({ url : (params.properties || {}).LogoSrc });
+                  }
+            
+            }.bind(this)
+         );
+      },
+      
+      setLogoImgage : function ( file ) {
+         new SK.API( this.configuration.session_id ).execute(
+            // The name 'command', to be executed
+            // For more information see http://help.webforce.com/customer/portal/articles/1401805-api-index
+            'object.site.set',
+         
+            // Options for the api call.
+            // Each api calls have different parameters.
+            // Refer to the documentation for the API calls, to see what parameters shoud pass for each api call
+            {
+                  properties : JSON.encode(
+                     {
+                        'LogoSrc' : file,
+                        'LogoType': '__Custom__'
+                     }
+                  )
+               },
+         
+            // Callback method for the api call
+            function ( success, message, params ) {
+            
+                  // Show success/failure message
+                  new SK.UI.NoticeBox( message );
+               }    
+         );
+      }
+      
+   });
+</script>
+<div id="logo-image-demo-control"></div>
